@@ -41,3 +41,20 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
   };
+
+  /* Essai avec Maskdata
+  const  MaskData  =  require ( './maskdata' ) ;
+
+const  emailMask2Options  =  { 
+    maskWith : "*" ,  
+    unmaskedStartCharactersBeforeAt : 3 , 
+    unmaskedEndCharactersAfterAt : 2 , 
+    maskAtTheRate : faux 
+} ;
+
+const  email  =  "mon.test.email@testEmail.com" ;
+
+const  maskedEmail  =  MaskData . maskEmail2 ( email ,  emailMask2Options ) ;
+
+// Sortie: my.********@**********om
+*/
