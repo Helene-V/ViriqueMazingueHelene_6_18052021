@@ -12,7 +12,7 @@ exports.signup = (req, res, next) => {
         });
         user.save()
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ error }));
+          .catch(error => res.status(400).json({ message: 'Veuillez vérifier votre adresse mail et/ou votre mot de passe s\'il vous plaît' }));
       })
       .catch(error => res.status(500).json({ error }));
 };
