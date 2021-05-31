@@ -9,8 +9,8 @@ exports.createSauce = (req, res, next) => {
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       likes:0, 
       dislikes:0,
-      userliked:[],
-      userDisliked:[]
+      usersliked:[],
+      usersDisliked:[]
     });
     sauce.save()
       .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
@@ -65,15 +65,15 @@ exports.likeOrDislike = (req, res, next) => {
           case 0: 
           if (!sauce.usersLiked.includes(req.body.userId)) {
             Sauce.updateOne({ _id: req.params.id }, 
-              { $inc: { likes, dislikes: 0 },
-                $push: { usersliked, usersDisliked } })                          
+              { $inc: { likes: -1 },
+                $pull: { usersliked: req.body.userId } })                          
             .then(()=> res.status(201).json({ message : 'modification effectuée' }))
             .catch(error => res.status(404).json({ error })
             )
-          } else {
+          } else if(!sauce.usersDisliked.includes(req.body.userId)) {
             Sauce.updateOne({ _id: req.params.id }, 
-              { $inc: { likes, dislikes: 0 },
-                $push: { usersliked, usersDisliked } })                           
+              { $inc: { dislikes: -1 },
+                $pull: { usersDisliked : req.body.userId } })                           
             .then(()=> res.status(201).json({ message : 'modification effectuée' }))
             .catch(error => res.status(404).json({ error })
             )
