@@ -1,4 +1,7 @@
 const express = require('express');
+const helmet = require("helmet");
+require('dotenv').config();
+
 const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
@@ -6,7 +9,10 @@ const path = require('path');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect('mongodb+srv://helenevi:test_helenevi@cluster0.tohdk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+const mongooseUser = process.env.EXPRESS_APP_MONGOOSE_USER;
+const mongoosePassword = process.env.EXPRESS_APP_MONGOOSE_PASSWORD;
+
+mongoose.connect(`mongodb+srv://${mongooseUser}:${mongoosePassword}@cluster0.tohdk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -21,6 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(helmet()); // Sécurisation des en-têtes HTTP
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
