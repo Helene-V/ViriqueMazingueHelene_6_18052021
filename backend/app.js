@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
 
-const stuffRoutes = require('./routes/stuff');
+const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
 mongoose.connect('mongodb+srv://helenevi:test_helenevi@cluster0.tohdk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -25,6 +25,6 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
-app.use('/api/sauces', stuffRoutes)
+app.use('/api/sauces', sauceRoutes)
 
 module.exports = app;

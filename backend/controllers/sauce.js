@@ -80,8 +80,8 @@ exports.likeOrDislike = (req, res, next) => {
           }
             break;
           case -1: 
-          if (!sauce.usersDisliked.includes(req.body.userId)) {
-            Sauce.updateOne({ _id: req.params.id }, 
+          if (!sauce.usersDisliked.includes(req.body.userId)) { // les likes ne sont pas verrouillés à 0 et peuvent partir en qté négative
+            Sauce.updateOne({ _id: req.params.id }, // moulinage quand on passe du + au - 2 fois de suite
                             { $inc: { likes: -1 }, 
                               $push: { usersDisliked:req.body.userId },
                               _id: req.params.id })                            
