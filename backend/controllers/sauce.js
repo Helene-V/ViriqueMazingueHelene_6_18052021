@@ -9,7 +9,7 @@ exports.createSauce = (req, res, next) => {
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       likes:0, 
       dislikes:0,
-      usersliked:[],
+      usersLiked:[],
       usersDisliked:[]
     });
     sauce.save()
@@ -47,52 +47,54 @@ exports.getOneSauce = (req, res, next) => {
       .catch(error => res.status(404).json({ error }));
 };
 
-exports.likeOrDislike = (req, res, next) => {
+exports.likeOrDislike = (req, res, next) => { // le like ne se remet pas à zero au dislike du like
   Sauce.findOne({ _id: req.params.id })
       .then (sauce => {
         switch (req.body.like) {
           case 1: 
             if (!sauce.usersLiked.includes(req.body.userId)) {
               Sauce.updateOne({ _id: req.params.id }, 
-                              { $inc: { likes: 1 }, 
-                                $push: { usersliked:req.body.userId },
-                                _id: req.params.id })                            
+                              { $inc: { likes: +1 }, 
+                                $push: { usersLiked:req.body.userId },
+                                        _id: req.params.id })                            
               .then(()=> res.status(201).json({ message : 'like ajouté avec succès' }))
               .catch(error => res.status(404).json({ error })
               )
             }
             break;
-          case 0: 
-          if (!sauce.usersLiked.includes(req.body.userId)) {
-            Sauce.updateOne({ _id: req.params.id }, 
-              { $inc: { likes: -1 },
-                $pull: { usersliked: req.body.userId } })                          
-            .then(()=> res.status(201).json({ message : 'modification effectuée' }))
-            .catch(error => res.status(404).json({ error })
-            )
-          } else if(!sauce.usersDisliked.includes(req.body.userId)) {
-            Sauce.updateOne({ _id: req.params.id }, 
-              { $inc: { dislikes: -1 },
-                $pull: { usersDisliked : req.body.userId } })                           
-            .then(()=> res.status(201).json({ message : 'modification effectuée' }))
-            .catch(error => res.status(404).json({ error })
-            )
-          }
-            break;
           case -1: 
-          if (!sauce.usersDisliked.includes(req.body.userId)) { // les likes ne sont pas verrouillés à 0 et peuvent partir en qté négative
-            Sauce.updateOne({ _id: req.params.id }, // moulinage quand on passe du + au - 2 fois de suite
-                            { $inc: { likes: -1 }, 
+          if (!sauce.usersDisliked.includes(req.body.userId)) {
+            Sauce.updateOne({ _id: req.params.id },
+                            { $inc: { dislikes: +1 }, 
                               $push: { usersDisliked:req.body.userId },
-                              _id: req.params.id })                            
+                                      _id: req.params.id })                            
             .then(()=> res.status(201).json({ message : 'like supprimé avec succès' }))
             .catch(error => res.status(404).json({ error })
             )
           }
             break;
-          default:
-            console.log('switch default');
-            throw new Error({ message: 'Problème'});   
+          case 0: 
+            if (sauce.usersLiked.includes(req.body.userId)) { //ici
+              Sauce.updateOne({ _id: req.params.id }, 
+                { $inc: { likes: -1 },
+                  $pull: { usersLiked:req.body.userId },
+                          _id: req.params.id })                          
+              .then(()=> res.status(201).json({ message : 'modification effectuée' }))
+              .catch(error => res.status(404).json({ error })
+              )
+            } else if(sauce.usersDisliked.includes(req.body.userId)) {
+              Sauce.updateOne({ _id: req.params.id }, 
+                { $inc: { dislikes: -1 },
+                  $pull: { usersDisliked:req.body.userId },
+                          _id: req.params.id })                           
+              .then(()=> res.status(201).json({ message : 'modification effectuée' }))
+              .catch(error => res.status(404).json({ error })
+              )
+            }
+              break;
+            default:
+              console.log('switch default');
+              throw new Error({ message: 'Problème'});
         }
       })
 };
