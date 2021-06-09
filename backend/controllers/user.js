@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt'); //hash du mot de passe avec bcrypt
 const jwt = require('jsonwebtoken');
+// Implémentation de MASKDATA :
+//const MaskData = require('../node_modules/maskdata');
+//const maskedEmail = require('../models/Maskdata'); 
 
 const User = require('../models/User')
 
@@ -7,6 +10,10 @@ exports.signup = (req, res, next) => {
    bcrypt.hash(req.body.password, 10)
       .then(hash => {
         const user = new User({
+          //Test 1 => email: maskedEmail.req.body.email,
+          //Test 2 =>email: MaskData.maskEmail2((req.body.email), emailMask2Options),
+          //Test 3 =>email: MaskData.maskEmail2(email, emailMask2Options),
+          //return maskedEmail
           email: req.body.email,
           password: hash
         });
@@ -18,6 +25,9 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+    //Test 1 => User.findOne({email: maskedEmail.req.body.email})
+    //Test 2 => User.findOne({ email: MaskData.maskEmail2((req.body.email), emailMask2Options) })
+    //Test 3 => User.findOne({ email: MaskData.maskEmail2(email, emailMask2Options) })
     User.findOne({ email: req.body.email })
       .then(user => {
         if (!user) {
@@ -41,20 +51,5 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
   };
+  //return maskedEmail;
 
-  /* Essai avec Maskdata
-  const  MaskData  =  require ( './maskdata' ) ;
-
-const  emailMask2Options  =  { 
-    maskWith : "*" ,  
-    unmaskedStartCharactersBeforeAt : 3 , 
-    unmaskedEndCharactersAfterAt : 2 , 
-    maskAtTheRate : faux 
-} ;
-
-const  email  =  "mon.test.email@testEmail.com" ;
-
-const  maskedEmail  =  MaskData . maskEmail2 ( email ,  emailMask2Options ) ;
-
-// Sortie: my.********@**********om
-*/
