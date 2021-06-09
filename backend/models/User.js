@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-// Ajout d'un package EMAIL-VALIDATOR pour vérifier la saisie de l'email :
-const validator = require('email-validator');
-validator.validate('test@email.com');
-
 
 const userId = mongoose.Schema({
   email: { type: String, required: true, unique: true },
