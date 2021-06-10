@@ -1,5 +1,5 @@
 const Sauce = require('../models/Sauce');
-const fs = require('fs');
+const fs = require('fs'); // Package file system ; modifier et supprimer les fichiers (image)
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
@@ -47,7 +47,7 @@ exports.getOneSauce = (req, res, next) => {
       .catch(error => res.status(404).json({ error }));
 };
 
-exports.likeOrDislike = (req, res, next) => { // le like ne se remet pas à zero au dislike du like
+exports.likeOrDislike = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
       .then (sauce => {
         switch (req.body.like) {

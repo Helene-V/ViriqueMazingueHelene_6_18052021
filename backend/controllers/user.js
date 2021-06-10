@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt'); //hash du mot de passe avec bcrypt
+const bcrypt = require('bcrypt'); // Hash du mot de passe avec bcrypt
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const maskData = require('maskdata');
@@ -18,10 +18,7 @@ exports.signup = (req, res, next) => {
    bcrypt.hash(req.body.password, 10)
       .then(hash => {
         const user = new User({
-          //Test 1 => email: maskedEmail.req.body.email,
           email: MaskData.maskEmail2((req.body.email), emailMask),
-          //Test 3 =>email: MaskData.maskEmail2(email, emailMask2Options),
-          //return maskedEmail
           //email: req.body.email,
           password: hash
         });
@@ -33,9 +30,6 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    //Test 1 => User.findOne({email: maskedEmail.req.body.email})
-    //Test 2 => User.findOne({ email: MaskData.maskEmail2((req.body.email), emailMask2Options) })
-    //Test 3 => User.findOne({ email: MaskData.maskEmail2(email, emailMask2Options) })
     //User.findOne({ email: req.body.email })
     User.findOne({ email: MaskData.maskEmail2((req.body.email), maskData) })
       .then(user => {
@@ -49,7 +43,7 @@ exports.login = (req, res, next) => {
             }
             res.status(200).json({
               userId: user._id,
-              token: jwt.sign(
+              token: jwt.sign( // Création du token encodé
                 { userId: user._id },
                 'RANDOM_TOKEN_SECRET',
                 { expiresIn: '24h' }
@@ -60,5 +54,4 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
   };
-  //return maskedEmail;
 

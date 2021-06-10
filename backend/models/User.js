@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator'); // Package permettant de contrôler que deux utilisateurs n'utilisent pas la même adresse mail
 
 
 const userId = mongoose.Schema({
@@ -8,6 +8,6 @@ const userId = mongoose.Schema({
 });
 
 
-userId.plugin(uniqueValidator); //Utilisation de unique-validator pour s'assurer qu'une adresse mail est unique dans la bdd
+userId.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User', userId);

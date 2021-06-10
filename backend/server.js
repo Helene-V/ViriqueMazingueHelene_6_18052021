@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('http'); // Importation du package de requêtes http
 const app = require('./app');
 
 const normalizePort = val => {
@@ -12,7 +12,7 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000'); 
 app.set('port', port);
 
 const errorHandler = error => {
