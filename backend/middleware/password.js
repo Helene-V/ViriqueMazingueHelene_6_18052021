@@ -1,16 +1,9 @@
-const passwordValidator = require('password-validator'); // Mise en place du package pour que l'utilisateur reforce son password à la création de son compte
+const schemaPassword = require('../models/Password'); // Mise en place du package pour que l'utilisateur reforce son password lors de la création de son compte
 
 module.exports = (req, res, next) => {
-    const schema = new passwordValidator()
-    try {
-      if (!schema.validate (req.body.schema)) {
-        throw 'Invalid password';
+      if (!schemaPassword.validate (req.body.password)) {
+        return res.status(400).json({ message: 'Veuillez vérifier votre mot de passe s\'il vous plaît' })
       } else {
         next();
       }
-    } catch {
-      res.status(401).json({
-        error: new Error('Invalid request!')
-      });
-    }
   };

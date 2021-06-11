@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const schema = new passwordValidator();
+const passwordValidator = require('password-validator')
+const schemaPassword = new passwordValidator();
 
-schema
+schemaPassword
 .is().min(8)                                    // Minimum length 8
 .is().max(100)                                  // Maximum length 100
 .has().uppercase()                              // Must have uppercase letters
@@ -10,4 +10,4 @@ schema
 .has().not().spaces()                           // Should not have spaces
 .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
-module.exports = mongoose.model('Password', schema);
+module.exports = schemaPassword;
