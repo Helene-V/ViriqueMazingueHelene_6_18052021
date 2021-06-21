@@ -1,4 +1,4 @@
-const passwordValidator = require('password-validator')
+const passwordValidator = require('password-validator') // Mise en place du package pour que l'utilisateur reforce son password lors de la création de son compte
 const schemaPassword = new passwordValidator();
 
 schemaPassword

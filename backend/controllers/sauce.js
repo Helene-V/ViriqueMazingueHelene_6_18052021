@@ -74,7 +74,7 @@ exports.likeOrDislike = (req, res, next) => {
           }
             break;
           case 0: 
-            if (sauce.usersLiked.includes(req.body.userId)) { //ici
+            if (sauce.usersLiked.includes(req.body.userId)) {
               Sauce.updateOne({ _id: req.params.id }, 
                 { $inc: { likes: -1 },
                   $pull: { usersLiked:req.body.userId },

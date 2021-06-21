@@ -9,7 +9,7 @@ const path = require('path');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-// Sécurisation de l'id et password via dotenv
+// Sécurisation de l'id et password via dotenv - accès base de données 
 const mongooseUser = process.env.EXPRESS_APP_MONGOOSE_USER;
 const mongoosePassword = process.env.EXPRESS_APP_MONGOOSE_PASSWORD;
 
@@ -20,7 +20,7 @@ mongoose.connect(`mongodb+srv://${mongooseUser}:${mongoosePassword}@cluster0.toh
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-// Headers
+// CORS - Permet à l'application d'accéder à l'API
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -33,7 +33,7 @@ app.use(helmet()); // Sécurisation des en-têtes HTTP
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/api/auth', userRoutes);
-app.use('/api/sauces', sauceRoutes)
+app.use('/api/auth', userRoutes); // Router importé depuis routes>user.js
+app.use('/api/sauces', sauceRoutes) // Router importé depuis routes>sauce.js
 
 module.exports = app;

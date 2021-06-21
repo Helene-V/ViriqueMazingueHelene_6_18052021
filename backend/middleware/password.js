@@ -1,4 +1,4 @@
-const schemaPassword = require('../models/Password'); // Mise en place du package pour que l'utilisateur reforce son password lors de la création de son compte
+const schemaPassword = require('../models/Password');
 
 module.exports = (req, res, next) => {
       if (!schemaPassword.validate (req.body.password)) {

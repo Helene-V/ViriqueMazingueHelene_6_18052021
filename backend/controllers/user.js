@@ -15,16 +15,16 @@ const emailMask = {
 
 
 exports.signup = (req, res, next) => {
-   bcrypt.hash(req.body.password, 10)
-      .then(hash => {
+   bcrypt.hash(req.body.password, 10) // Hash du mot de passe passé dans le body avec 10 salages
+      .then(hash => { // Récupération du hash de mot de passe
         const user = new User({
           email: MaskData.maskEmail2((req.body.email), emailMask),
           //email: req.body.email,
-          password: hash
+          password: hash  // Enregistrement du mot de passe crypté
         });
         user.save()
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ message: 'Veuillez vérifier votre adresse mail et/ou votre mot de passe s\'il vous plaît' }));
+          .catch(error => res.status(400).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
 };
@@ -44,8 +44,8 @@ exports.login = (req, res, next) => {
             res.status(200).json({
               userId: user._id,
               token: jwt.sign( // Création du token encodé
-                { userId: user._id },
-                'RANDOM_TOKEN_SECRET',
+                { userId: user._id }, // Un utilisateur ne doit pas pouvoir modifier un objet d'un autre utilisateur
+                'RANDOM_TOKEN_SECRET', // En production, indiquer une clé complexe et aléatoire
                 { expiresIn: '24h' }
               )
             });
